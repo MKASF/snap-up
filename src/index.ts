@@ -3,15 +3,10 @@ import * as puppeteer from 'puppeteer';
 import * as querystring from 'querystring';
 import task from './task';
 import { getSnapUpUrl, gotoUrl } from './util';
+const { eid, fp } = require('../config');
 const deliveryData = require('../init.action.json');
 
 declare const $: any;
-/**
- * 注意：在抢购程序打开的浏览器里操作
- * 具体操作：https://github.com/tychxn/jd-assistant/wiki/3.-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98#3-eid-fp-track_id-risk_control-%E5%8F%82%E6%95%B0%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96
- */
-const eid = "OJCQVGRNMVSGAC5FE2AALR4MDOWVOZGKFEBNEAAIQZKOO6HDLLQ3DA3FW4LEJJHGEUB7ATVCEO6TI7LCVG2VFQ3WXM";
-const fp = "83f88e123437f22e0cf7eb58c32d12ab";
 const customHtml = `
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
