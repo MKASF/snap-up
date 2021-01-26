@@ -5,7 +5,9 @@
 ## 安装
 
 1. .npmrc文件添加以下2个镜像
+
 ``registry=https://registry.npm.taobao.org/
+
 PUPPETEER_DOWNLOAD_HOST=https://npm.taobao.org/mirrors``
 
 2. 当前文件目录执行`npm i`
