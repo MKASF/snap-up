@@ -3,7 +3,7 @@ import * as puppeteer from 'puppeteer';
 import * as querystring from 'querystring';
 import task from './task';
 import { getSnapUpUrl, gotoUrl } from './util';
-const { eid, fp } = require('../config');
+const { eid, fp } = require('../config.json');
 const deliveryData = require('../init.action.json');
 
 declare const $: any;
@@ -143,7 +143,7 @@ function scheduleCronstyle(browser: puppeteer.Browser) {
       }, item.skuId);
       const targetUrl = await getSnapUpUrl(page);
       console.log(key + '  立即抢购链接', targetUrl);
-      console.log(key + '  localTime', new Date());
+      console.log(key + '  localTime', Date.now());
       await page.setRequestInterception(true);
       page.on('request', async (request) => {
         const type = request.resourceType();

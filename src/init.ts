@@ -2,7 +2,14 @@ import * as fs from 'fs';
 import * as puppeteer from 'puppeteer';
 import { getSnapUpUrl, gotoUrl } from './util';
 
+interface WindowExtends extends Window {
+  _JdEid: string;
+  _JdJrTdRiskFpInfo: string;
+}
+
 declare const $: any;
+declare const window: WindowExtends;
+
 const skuId = '100012043978';
 /** 获取收货信息 */
 async function getDeliveryInfo(page: puppeteer.Page, skuId: string): Promise<any> {
@@ -23,6 +30,16 @@ async function getDeliveryInfo(page: puppeteer.Page, skuId: string): Promise<any
     };
     page.on('response', listener);
   });
+}
+
+/** 获取eid和fp */
+async function getJdParamsInfo(page: puppeteer.Page) {
+  return await page.evaluate(() => {
+    return {
+      eid: window._JdEid,
+      fp: window._JdJrTdRiskFpInfo
+    }
+  })
 }
 
 (async () => {
@@ -64,12 +81,11 @@ async function getDeliveryInfo(page: puppeteer.Page, skuId: string): Promise<any
     request();
   }, skuId);
   const targetUrl = await getSnapUpUrl(page);
-  page.on('domcontentloaded', async () => {
-    const deliveryData = await getDeliveryInfo(page, skuId);
-    fs.writeFileSync('init.action.json', JSON.stringify(deliveryData), { encoding: 'utf8' });
-    console.log('已生成init.action.json');
-  });
-  await gotoUrl(page, targetUrl, {
-    waitUntil: 'domcontentloaded'
-  });
+  await gotoUrl(page, targetUrl);
+  const deliveryData = await getDeliveryInfo(page, skuId);
+  const jdParamsInfo = await getJdParamsInfo(page);
+  fs.writeFileSync('init.action.json', JSON.stringify(deliveryData), { encoding: 'utf8' });
+  console.log('已生成init.action.json');
+  fs.writeFileSync('config.json', JSON.stringify(jdParamsInfo), { encoding: 'utf8' });
+  console.log('已生成config.json');
 })();
